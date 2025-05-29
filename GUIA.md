@@ -24,6 +24,7 @@ API-REST-NESTJS-EJEMPLO/
 - 🏗️ Arquitectura modular y escalable
 - 🔍 Estructura clara y organizada
 - ✨ Implementación de mejores prácticas
+- 📖 Página de inicio con documentación dinámica desde README.md
 
 ## Documentación de la API
 
@@ -113,6 +114,82 @@ import { EjemploModule } from './modulos/ejemplo/ejemplo.module';
 })
 export class AppModule {}
 ```
+
+## Página de Inicio con README.md
+
+El proyecto incluye una característica especial que convierte el contenido del README.md en una página de inicio HTML estilizada. Para implementar esto:
+
+### Dependencias Necesarias
+```bash
+npm install marked
+```
+
+### Estructura de Archivos
+- `app.service.ts` - Servicio para leer y convertir el README.md
+- `app.controller.ts` - Controlador que sirve la página HTML
+
+### Ejemplo de Implementación
+
+#### Service (app.service.ts)
+```typescript
+import { Injectable } from '@nestjs/common';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import * as marked from 'marked';
+
+@Injectable()
+export class AppService {
+  getReadmeContent(): string {
+    try {
+      const readmePath = join(process.cwd(), 'README.md');
+      const readmeContent = readFileSync(readmePath, 'utf8');
+      const htmlContent = marked.parse(readmeContent);
+      
+      return `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>API REST NestJS - Documentación</title>
+            <style>
+              body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto;
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2rem;
+              }
+              // ... más estilos ...
+            </style>
+          </head>
+          <body>${htmlContent}</body>
+        </html>
+      `;
+    } catch (error) {
+      return 'Error al cargar la documentación';
+    }
+  }
+}
+```
+
+#### Controller (app.controller.ts)
+```typescript
+import { Controller, Get, Header } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+
+@ApiTags('Documentación')
+@Controller()
+export class AppController {
+  @Get()
+  @Header('Content-Type', 'text/html')
+  @ApiOperation({ summary: 'Obtener la documentación principal del proyecto' })
+  getDocumentation(): string {
+    return this.appService.getReadmeContent();
+  }
+}
+```
+
+### Rutas Disponibles
+- `/` - Muestra la documentación del README.md en formato HTML
+- `/docs` - Muestra la documentación Swagger de la API
 
 ## Convenciones y Buenas Prácticas
 

@@ -98,4 +98,5 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
 # 👀 GUIA PASO A PASO 👀
-ENTRA A GUIA.md o si no, [CLICK ACA!](GUIA.md)
+- Ver la guía en formato Markdown: [GUIA.md](GUIA.md)
+- Ver la guía en formato HTML: [/guia](/guia)
